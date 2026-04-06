@@ -3,6 +3,7 @@ package com.example.orderservice;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,6 +41,24 @@ class OrderControllerTests {
         mockMvc.perform(get("/api/orders/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customerName").value("Ravi"));
+
+        mockMvc.perform(put("/api/orders/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "customerName": "Ravi Kumar",
+                                  "itemName": "Paneer Biryani",
+                                  "quantity": 2,
+                                  "status": "UPDATED"
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.customerName").value("Ravi Kumar"))
+                .andExpect(jsonPath("$.status").value("UPDATED"));
+
+        mockMvc.perform(get("/api/orders?restaurantId=10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].itemName").value("Paneer Biryani"));
 
         mockMvc.perform(delete("/api/orders/1"))
                 .andExpect(status().isNoContent());
