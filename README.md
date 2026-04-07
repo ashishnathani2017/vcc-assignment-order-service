@@ -10,6 +10,10 @@ APIs:
 - `PUT /api/orders/{id}`
 - `DELETE /api/orders/{id}`
 
+Metrics:
+- `GET /actuator/health`
+- `GET /actuator/prometheus`
+
 Run:
 
 ```bash
